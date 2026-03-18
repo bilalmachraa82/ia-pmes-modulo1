@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cheat Sheet — 10 Prompts Prontos a Usar</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Calibri', 'Segoe UI', sans-serif;
+            background-color: #0F1B2D;
+            color: #FFFFFF;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #E87722;
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            font-family: 'Georgia', serif;
+            font-size: 2em;
+            margin-bottom: 8px;
+            color: #E87722;
+        }
+
+        .subtitle {
+            font-size: 1em;
+            color: #0891B2;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: #1B365D;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .framework-section {
+            background-color: #0F1B2D;
+            padding: 25px;
+            border-left: 5px solid #0891B2;
+            border-radius: 4px;
+            margin-bottom: 35px;
+        }
+
+        .framework-section h2 {
+            font-family: 'Georgia', serif;
+            font-size: 1.3em;
+            color: #0891B2;
+            margin-bottom: 15px;
+        }
+
+        .framework-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .framework-item {
+            background-color: #1B365D;
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid #0891B2;
+        }
+
+        .framework-item strong {
+            color: #E87722;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+
+        .framework-item p {
+            font-size: 0.85em;
+            line-height: 1.5;
+        }
+
+        .category-section {
+            margin-bottom: 35px;
+        }
+
+        .category-title {
+            font-family: 'Georgia', serif;
+            font-size: 1.3em;
+            color: #E87722;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #0891B2;
+        }
+
+        .prompts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 20px;
+        }
+
+        .prompt-card {
+            background-color: #0F1B2D;
+            border: 2px solid #0891B2;
+            border-radius: 4px;
+            padding: 0;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .prompt-card:hover {
+            border-color: #E87722;
+            box-shadow: 0 4px 12px rgba(232, 119, 34, 0.2);
+        }
+
+        .prompt-header {
+            background-color: #1B365D;
+            padding: 12px 15px;
+            border-bottom: 2px solid #0891B2;
+        }
+
+        .prompt-title {
+            font-weight: 600;
+            color: #E87722;
+            font-size: 0.95em;
+            margin-bottom: 5px;
+        }
+
+        .prompt-tools {
+            font-size: 0.75em;
+            color: #0891B2;
+        }
+
+        .prompt-tools span {
+            display: inline-block;
+            background-color: #0F1B2D;
+            padding: 2px 8px;
+            border-radius: 3px;
+            margin-right: 5px;
+            margin-top: 3px;
+        }
+
+        .prompt-content {
+            padding: 15px;
+        }
+
+        .prompt-text {
+            background-color: #1B365D;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            line-height: 1.5;
+            color: #E0E0E0;
+            max-height: 180px;
+            overflow-y: auto;
+            border-left: 3px solid #E87722;
+        }
+
+        .copy-button {
+            display: block;
+            width: 100%;
+            padding: 8px;
+            background-color: #E87722;
+            color: #0F1B2D;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85em;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .copy-button:hover {
+            background-color: #FF9D5C;
+            transform: translateY(-2px);
+        }
+
+        .copy-button.copied {
+            background-color: #0891B2;
+            color: white;
+        }
+
+        .tips {
+            font-size: 0.8em;
+            color: #0891B2;
+            margin-top: 10px;
+            padding: 8px;
+            background-color: #0F1B2D;
+            border-radius: 3px;
+            border-left: 2px solid #0891B2;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #0891B2;
+            font-size: 0.85em;
+            color: #999;
+        }
+
+        @media print {
+            body {
+                background-color: white;
+            }
+
+            .container {
+                background-color: white;
+                color: #000;
+                box-shadow: none;
+            }
+
+            h1, h2, .category-title {
+                color: #0F1B2D;
+            }
+
+            .prompt-card {
+                page-break-inside: avoid;
+            }
+
+            .copy-button {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.4em;
+            }
+
+            .container {
+                padding: 20px;
+            }
+
+            .prompts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .framework-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .framework-grid, .prompts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .prompt-text {
+                max-height: 150px;
+                font-size: 0.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Cheat Sheet — 10 Prompts Prontos a Usar</h1>
+        <p class="subtitle">Copie e cole direto para Claude, ChatGPT ou Gemini</p>
+    </header>
+
+    <div class="container">
+        <!-- Framework CREA -->
+        <div class="framework-section">
+            <h2>Framework CREA para Prompts Eficazes</h2>
+            <div class="framework-grid">
+                <div class="framework-item">
+                    <strong>C — Contexto</strong>
+                    <p>Explique a situação, o background e o que é importante saber</p>
+                </div>
+                <div class="framework-item">
+                    <strong>R — Role</strong>
+                    <p>Defina o papel que a IA deve assumir (ex: consultor, copywriter, analista)</p>
+                </div>
+                <div class="framework-item">
+                    <strong>E — Especificidade</strong>
+                    <p>Seja específico: formato, tamanho, tom, restrições e detalhes do output</p>
+                </div>
+                <div class="framework-item">
+                    <strong>A — Ação</strong>
+                    <p>Peça à IA para executar (a pergunta final clara e objetiva)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comunicação -->
+        <div class="category-section">
+            <h3 class="category-title">Comunicação</h3>
+            <div class="prompts-grid">
+                <div class="prompt-card">
+                    <div class="prompt-header">
+                        <div class="prompt-title">1. Email Profissional</div>
+                        <div class="prompt-tools">Ferramentas ideais: <span>Claude</span><span>ChatGPT</span></div>
+                    </div>
+                    <div class="prompt-content">
+                        <div class="prompt-text">Escreva um email profissional para [DESTINATÁRIO] sobre [ASSUNTO]. Tom: [TOM - ex: formal, amigável]. Inclua:
+- Saudação
+- 2-3 parágrafos explicando [CONTEXTO]
+- Call-to-action claro
+- Encerramento profissional</div>
+                        <button class="copy-button" onclick="copyToClipboard(this)">Copiar Prompt</button>
+                        <div class="tips">💡 Dica: Seja específico sobre o tom. Use para comunicações internas ou com clientes.</div>
+                    </div>
+                </div>
+
+                <div class="prompt-card">
+                    <div class="prompt-header">
+                        <div class="prompt-title">2. Resposta a Review/Reclamação</div>
+                        <div class="prompt-tools">Ferramentas ideais: <span>Claude</span><span>ChatGPT</span></div>
+                    </div>
+                    <div class="prompt-content">
+                        <div class="prompt-text">Cliente deixou esta reclamação: "[RECLAMAÇÃO]"
+
+Escreva uma resposta que:
+1. Reconheça a frustração
+2. Explique o que aconteceu
+3. Ofereça uma solução específica
+4. Feche com empatia
+
+Tom: empático mas profissional</div>
+                        <button class="copy-button" onclick="copyToClipboard(this)">Copiar Prompt</button>
+                        <div class="tips">💡 Dica: Cole a reclamação exata. A IA vai escrever algo mais humanizado que templates genéricos.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Análise -->
+        <div class="category-section">
+            <h3 class="category-title">Análise</h3>
+            <div class="prompts-grid">
+                <div class="prompt-card">
+                    <div class="prompt-header">
+                        <div class="prompt-title">3. Resumo Executivo de Documento</div>
+                        <div class="prompt-tools">Ferramentas ideais: <span>Claude</span><span>Gemini</span></div>
+                    </div>
+                    <div class="prompt-content">
+                        <div class="prompt-text">[COLAR DOCUMENTO INTEIRO AQUI]
+
+Faça um resumo executivo com:
+- 3-4 pontos-chave
+- 1 recomendação principal
+- Risco ou oportunidade não mencionada
+- Formato: máximo 200 palavras</div>
+                        <button class="copy-button" onclick="copyToClipboard(this)">Copiar Prompt</button>
+                        <div class="tips">💡 Dica: Claude é especialmente bom com documentos longos (até 100K caracteres).</div>
+                    </div>
+                </div>
+
+                <div class="prompt-card">
+                    <div class="prompt-header">
+                        <div class="prompt-title">4. Análise de Dados de Vendas</div>
+                        <div class="prompt-tools">Ferramentas ideais: <span>Claude</span><span>ChatGPT</span></div>
+                    </div>
+                    <div class="prompt-content">
+                        <div class="prompt-text">Analisei vendas nos últimos 6 meses:
+[DADOS OU TABELA AQUI]
+
+Que padrões vê? Quais produtos estão abaixo do esperado? Há uma sazonalidade clara?
+
+Faça uma análise tipo:
+- 3 padrões
+- 2 preocupações
+- 1 ação recomendada</div>
+                        <button class="copy-button" onclick="copyToClipboard(this)">Copiar Prompt</button>
+                        <div class="tips">💡 Dica: Copie dados de Excel diretamente. A IA interpreta tabelas muito bem.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Documentação -->
+        <div class="category-section">
+            <h3 class="category-title">Documentação</h3>
+            <div class="prompts-grid">
+                <div class="prompt-card">
+                    <div class="prompt-header">
+                        <div class="prompt-title">5. SOP de Processo Interno</div>
+                        <div class="prompt-tools">Ferramentas ideais: <span>Claude</span></div>
+                    </div>
+                    <div class="prompt-content">
+                        <div class="prompt-text">Descreva este processo do seu jeito:
+[DESCRIÇÃO LIVRE - como funciona hoje]
+
+Escreva um SOP estruturado com:
+- Objetivo
+- Pré-requisitos
+- Passo-a-passo numerado (máx 10 passos)
+- Responsáveis
+- Checklist final
+
+Linguagem: clara e simples</div>
+                        <button class="copy-button" onclick="copyToClipboard(this)">Copiar Prompt</button>
+                        <div class="tips">💡 Dica: Depois do SOP, peça para "revisar para clareza".</div>
+                    </div>
+                </div>
+
+                <div class="prompt-card">
+                    <div class="prompt-header">
+                        <div class="prompt-title">6. Proposta Comercial</div>
+                        <div class="prompt-tools">Ferramentas ideais: <span>Claude</span><span>ChatGPT</span></div>
+                    </div>
+                    <div class="prompt-content">
+                        <div class="prompt-text">Escreva uma proposta para [CLIENTE]:
+- Empresa: [NOME]
+- Serviço/Produto: [DESCRIÇÃO]
+- Investimento: [VALOR]
+- Prazo: [TEMPO]
+
+Estrutura:
+- Executivo (2 parágrafos)
+- Solução
+- Investimento & Pagamento
+- Timeline
+- Condições</div>
+                        <button class="copy-button" onclick="copyToClipboard(this)">Copiar Prompt</button>
+                        <div class="tips">💡 Dica: Customize com seus números. Tone profissional mas acessível.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Estratégia -->
+        <div class="category-section">
+            <h3 class="category-title">Estratégia</h3>
+            <div class="prompts-grid">
+                <div class="prompt-card">
+                    <div class="prompt-header">
+                        <div class="prompt-title">7. Análise SWOT</div>
+                        <div class="prompt-tools">Ferramentas ideais: <span>Claude</span><span>ChatGPT</span></div>
+                    </div>
+                    <div class="prompt-content">
+                        <div class="prompt-text">Empresa: [NOME]
+Sector: [SECTOR]
+Tamanho: [PME/Grande]
+
+Faça uma análise SWOT com:
+- 4-5 items por categoria
+- Nota breve explicando cada um
+
+Foque em realismo e acionabilidade, não em clichés.</div>
+                        <button class="copy-button" onclick="copyToClipboard(this)">Copiar Prompt</button>
+                        <div class="tips">💡 Dica: Depois peça um "Plano 90 dias" baseado nas Oportunidades.</div>
+                    </div>
+                </div>
+
+                <div class="prompt-card">
+                    <div class="prompt-header">
+                        <div class="prompt-title">8. Plano de Marketing Mensal</div>
+                        <div class="prompt-tools">Ferramentas ideais: <span>Claude</span><span>ChatGPT</span></div>
+                    </div>
+                    <div class="prompt-content">
+                        <div class="prompt-text">Produto/Serviço: [DESCRIÇÃO]
+Público-alvo: [QUEM]
+Orçamento: [€ VALOR]
+
+Crie um plano mensal com:
+- 3 canais (email, LinkedIn, conteúdo)
+- 1 conteúdo para cada canal
+- KPIs para medir sucesso
+- Frequência de posts
+
+Seja específico e prático</div>
+                        <button class="copy-button" onclick="copyToClipboard(this)">Copiar Prompt</button>
+                        <div class="tips">💡 Dica: Peça "Calendário de publicação" para ter datas concretas.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Operações -->
+        <div class="category-section">
+            <h3 class="category-title">Operações</h3>
+            <div class="prompts-grid">
+                <div class="prompt-card">
+                    <div class="prompt-header">
+                        <div class="prompt-title">9. Acta de Reunião (das notas)</div>
+                        <div class="prompt-tools">Ferramentas ideais: <span>Claude</span></div>
+                    </div>
+                    <div class="prompt-content">
+                        <div class="prompt-text">Aqui estão as notas da reunião de [DATA]:
+[COLAR NOTAS LIVRES]
+
+Crie uma acta com:
+- Participantes & Data
+- Ordem do dia
+- Decisões tomadas
+- Ações (quem + quando)
+- Próxima reunião
+
+Formato: profissional e conciso</div>
+                        <button class="copy-button" onclick="copyToClipboard(this)">Copiar Prompt</button>
+                        <div class="tips">💡 Dica: Claude é excelente a estruturar notas desorganizadas.</div>
+                    </div>
+                </div>
+
+                <div class="prompt-card">
+                    <div class="prompt-header">
+                        <div class="prompt-title">10. Checklist de Onboarding</div>
+                        <div class="prompt-tools">Ferramentas ideais: <span>Claude</span><span>ChatGPT</span></div>
+                    </div>
+                    <div class="prompt-content">
+                        <div class="prompt-text">Cargo: [POSIÇÃO]
+Departamento: [DEPTO]
+Dias iniciais: [SEMANAS PRIMEIRO MÊS]
+
+Crie checklist com:
+- Dia 1 (essencial)
+- Semana 1 (conhecer pessoas)
+- Semana 2-4 (competências)
+- Responsáveis por cada item
+- Itens obrigatórios vs. ideais</div>
+                        <button class="copy-button" onclick="copyToClipboard(this)">Copiar Prompt</button>
+                        <div class="tips">💡 Dica: Customize com sua cultura. Deixe essa checklist pronta para novo colega.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer class="footer">
+        <p>© 2026 IA para PMEs — Cheat Sheet de Prompts</p>
+        <p>Dica: Customize estes prompts com seus dados reais para melhores resultados</p>
+    </footer>
+
+    <script>
+        function copyToClipboard(button) {
+            const promptText = button.previousElementSibling.innerText;
+            navigator.clipboard.writeText(promptText).then(() => {
+                const originalText = button.innerText;
+                button.innerText = '✓ Copiado!';
+                button.classList.add('copied');
+                setTimeout(() => {
+                    button.innerText = originalText;
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>

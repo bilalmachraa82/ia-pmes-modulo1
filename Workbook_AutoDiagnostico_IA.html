@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workbook — Auto-Diagnóstico de Maturidade IA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Calibri', 'Segoe UI', sans-serif;
+            background-color: #0F1B2D;
+            color: #FFFFFF;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 3px solid #E87722;
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            font-family: 'Georgia', serif;
+            font-size: 2.2em;
+            margin-bottom: 8px;
+            color: #E87722;
+        }
+
+        .subtitle {
+            font-size: 1.1em;
+            color: #0891B2;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #1B365D;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .dimension {
+            margin-bottom: 35px;
+            padding: 20px;
+            background-color: #0F1B2D;
+            border-left: 5px solid #E87722;
+            border-radius: 4px;
+        }
+
+        .dimension h2 {
+            font-family: 'Georgia', serif;
+            font-size: 1.3em;
+            color: #E87722;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dimension-score {
+            display: inline-block;
+            background-color: #0891B2;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+
+        .question {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #1B365D;
+            border-radius: 4px;
+        }
+
+        .question-text {
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 0.95em;
+        }
+
+        .rating-options {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .rating-option {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 8px 12px;
+            background-color: #0F1B2D;
+            border: 2px solid #0891B2;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .rating-option:hover {
+            background-color: #0891B2;
+            color: #0F1B2D;
+        }
+
+        .rating-option input[type="radio"] {
+            margin-right: 6px;
+            cursor: pointer;
+        }
+
+        .rating-option input[type="radio"]:checked + label {
+            font-weight: bold;
+        }
+
+        .rating-option input[type="radio"]:checked {
+            accent-color: #E87722;
+        }
+
+        label {
+            cursor: pointer;
+            margin: 0;
+        }
+
+        .results-section {
+            margin-top: 50px;
+            padding: 25px;
+            background-color: #0F1B2D;
+            border: 2px solid #E87722;
+            border-radius: 4px;
+        }
+
+        .results-section h3 {
+            font-family: 'Georgia', serif;
+            font-size: 1.2em;
+            color: #E87722;
+            margin-bottom: 15px;
+        }
+
+        .score-display {
+            font-size: 2.5em;
+            color: #0891B2;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .score-range {
+            text-align: center;
+            font-size: 1.1em;
+            color: #FFFFFF;
+            margin-bottom: 15px;
+        }
+
+        .interpretation {
+            background-color: #1B365D;
+            padding: 20px;
+            border-radius: 4px;
+            margin-top: 15px;
+            border-left: 5px solid #0891B2;
+        }
+
+        .interpretation h4 {
+            color: #E87722;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+
+        .interpretation p {
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+
+        .inefficiencies-section {
+            margin-top: 40px;
+            padding: 25px;
+            background-color: #0F1B2D;
+            border: 2px solid #0891B2;
+            border-radius: 4px;
+        }
+
+        .inefficiencies-section h3 {
+            font-family: 'Georgia', serif;
+            font-size: 1.2em;
+            color: #0891B2;
+            margin-bottom: 20px;
+        }
+
+        .inefficiency-item {
+            margin-bottom: 25px;
+            padding: 15px;
+            background-color: #1B365D;
+            border-radius: 4px;
+        }
+
+        .inefficiency-item h4 {
+            color: #E87722;
+            margin-bottom: 10px;
+        }
+
+        .inefficiency-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group label {
+            font-size: 0.85em;
+            color: #0891B2;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .input-group input {
+            padding: 8px;
+            background-color: #0F1B2D;
+            border: 1px solid #0891B2;
+            color: white;
+            border-radius: 4px;
+            font-family: inherit;
+        }
+
+        .input-group input::placeholder {
+            color: #666;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #E87722;
+            box-shadow: 0 0 5px rgba(232, 119, 34, 0.3);
+        }
+
+        .cost-calculation {
+            padding: 12px;
+            background-color: #0F1B2D;
+            border-radius: 4px;
+            border-left: 3px solid #0891B2;
+            font-size: 0.9em;
+        }
+
+        .cost-value {
+            color: #E87722;
+            font-weight: bold;
+            font-size: 1.05em;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        button {
+            padding: 12px 30px;
+            font-size: 1em;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background-color: #E87722;
+            color: #0F1B2D;
+        }
+
+        .btn-primary:hover {
+            background-color: #FF9D5C;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(232, 119, 34, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: #0891B2;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #06A8C8;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(8, 145, 178, 0.3);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #0891B2;
+            font-size: 0.85em;
+            color: #999;
+        }
+
+        @media print {
+            body {
+                background-color: white;
+            }
+
+            .container {
+                background-color: white;
+                color: #000;
+                box-shadow: none;
+                border: 1px solid #ccc;
+            }
+
+            .dimension {
+                background-color: #f9f9f9;
+                color: #000;
+            }
+
+            h1, h2, h3, h4 {
+                color: #0F1B2D;
+            }
+
+            .question {
+                background-color: #f9f9f9;
+                color: #000;
+            }
+
+            .rating-option, .rating-option:hover {
+                background-color: white;
+                color: #000;
+            }
+
+            .results-section, .inefficiencies-section, .input-group input {
+                background-color: white;
+                color: #000;
+            }
+
+            .score-display {
+                color: #0F1B2D;
+            }
+
+            button {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.6em;
+            }
+
+            .container {
+                padding: 20px;
+            }
+
+            .inefficiency-inputs {
+                grid-template-columns: 1fr;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Workbook — Auto-Diagnóstico de Maturidade IA</h1>
+        <p class="subtitle">Avalie o nível de prontidão da sua PME para IA</p>
+    </header>
+
+    <div class="container">
+        <form id="diagnosticForm">
+            <!-- Dimensão 1: Literacia IA -->
+            <div class="dimension">
+                <h2>Dimensão 1 — Literacia IA <span class="dimension-score" id="score-d1">0/15</span></h2>
+
+                <div class="question">
+                    <div class="question-text">1.1 A equipa sabe o que é IA generativa?</div>
+                    <div class="rating-options">
+                        <label class="rating-option">
+                            <input type="radio" name="q1" value="1"> <label>1 - Nenhuma ideia</label>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="q1" value="2"> <label>2 - Noção vaga</label>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="q1" value="3"> <label>3 - Conhecimento básico</label>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="q1" value="4"> <label>4 - Bom entendimento</label>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="q1" value="5"> <label>5 - Especialista</label>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">1.2 Já experimentaram ferramentas como ChatGPT ou Claude?</div>
+                    <div class="rating-options">
+                        <label class="rating-option">
+                            <input type="radio" name="q2" value="1"> <label>1 - Nunca</label>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="q2" value="2"> <label>2 - Alguns experimentaram</label>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="q2" value="3"> <label>3 - Alguns usam regularmente</label>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="q2" value="4"> <label>4 - Maioria usa</label>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="q2" value="5"> <label>5 - Todas as pessoas usam</label>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">1.3 Sabem distinguir tarefas automatizáveis de não-automatizáveis?</div>
+                    <div class="rating-options">
+                        <label class="rating-option">
+                            <input type="radio" name="q3" value="1"> <label>1 - Não</label>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="q3" value="2"> <label>2 - Parcialmente</label>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="q3" value="3"> <label>3 - Sim, com ajuda</label>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="q3" value="4"> <label>4 - Sim, claramente</label>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="q3" value="5"> <label>5 - Excelente discernimento</label>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dimensão 2: Processos -->
+            <div class="dimension">
+                <h2>Dimensão 2 — Processos <span class="dimension-score" id="score-d2">0/15</span></h2>
+
+                <div class="question">
+                    <div class="question-text">2.1 Têm processos documentados (SOPs)?</div>
+                    <div class="rating-options">
+                        <label class="rating-option">
+                            <input type="radio" name="q4" value="1"> <label>1 - Nenhum</label>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="q4" value="2"> <label>2 - Muito poucos</label>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="q4" value="3"> <label>3 - Alguns processos</label>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="q4" value="4"> <label>4 - Maioria documentada</label>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="q4" value="5"> <label>5 - Tudo documentado</label>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">2.2 Sabem quanto tempo gastam em tarefas repetitivas?</div>
+                    <div class="rating-options">
+                        <label class="rating-option">
+                            <input type="radio" name="q5" value="1"> <label>1 - Não têm ideia</label>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="q5" value="2"> <label>2 - Estimativa vaga</label>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="q5" value="3"> <label>3 - Tem uma noção</label>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="q5" value="4"> <label>4 - Razoavelmente informado</label>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="q5" value="5"> <label>5 - Metrificado</label>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">2.3 Existe um processo que toda a gente sabe que é ineficiente?</div>
+                    <div class="rating-options">
+                        <label class="rating-option">
+                            <input type="radio" name="q6" value="5"> <label>5 - Sim, múltiplos</label>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="q6" value="4"> <label>4 - Sim, alguns</label>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="q6" value="3"> <label>3 - Talvez um ou dois</label>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="q6" value="2"> <label>2 - Não está claro</label>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="q6" value="1"> <label>1 - Tudo é eficiente</label>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dimensão 3: Dados -->
+            <div class="dimension">
+                <h2>Dimensão 3 — Dados <span class="dimension-score" id="score-d3">0/10</span></h2>
+
+                <div class="question">
+                    <div class="question-text">3.1 Os dados da empresa estão organizados e acessíveis?</div>
+                    <div class="rating-options">
+                        <label class="rating-option">
+                            <input type="radio" name="q7" value="1"> <label>1 - Caos</label>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="q7" value="2"> <label>2 - Muito desorganizado</label>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="q7" value="3"> <label>3 - Razoavelmente organizado</label>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="q7" value="4"> <label>4 - Bem organizado</label>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="q7" value="5"> <label>5 - Excelentemente estruturado</label>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">3.2 Usam dados para tomar decisões ou é 'pelo instinto'?</div>
+                    <div class="rating-options">
+                        <label class="rating-option">
+                            <input type="radio" name="q8" value="1"> <label>1 - Puro instinto</label>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="q8" value="2"> <label>2 - Mais instinto</label>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="q8" value="3"> <label>3 - Misturado</label>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="q8" value="4"> <label>4 - Mais dados</label>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="q8" value="5"> <label>5 - Totalmente baseado em dados</label>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dimensão 4: Tecnologia -->
+            <div class="dimension">
+                <h2>Dimensão 4 — Tecnologia <span class="dimension-score" id="score-d4">0/10</span></h2>
+
+                <div class="question">
+                    <div class="question-text">4.1 A infra-estrutura suporta ferramentas cloud?</div>
+                    <div class="rating-options">
+                        <label class="rating-option">
+                            <input type="radio" name="q9" value="1"> <label>1 - Não há infra cloud</label>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="q9" value="2"> <label>2 - Muito limitada</label>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="q9" value="3"> <label>3 - Parcial</label>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="q9" value="4"> <label>4 - Boa capacidade</label>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="q9" value="5"> <label>5 - Cloud-first</label>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">4.2 A equipa usa ferramentas digitais no dia-a-dia?</div>
+                    <div class="rating-options">
+                        <label class="rating-option">
+                            <input type="radio" name="q10" value="1"> <label>1 - Papel e Excel apenas</label>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="q10" value="2"> <label>2 - Algumas ferramentas antigas</label>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="q10" value="3"> <label>3 - Ferramentas básicas</label>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="q10" value="4"> <label>4 - Bom leque de ferramentas</label>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="q10" value="5"> <label>5 - Inovador e integrado</label>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dimensão 5: Cultura -->
+            <div class="dimension">
+                <h2>Dimensão 5 — Cultura <span class="dimension-score" id="score-d5">0/10</span></h2>
+
+                <div class="question">
+                    <div class="question-text">5.1 A liderança está aberta a experimentar IA?</div>
+                    <div class="rating-options">
+                        <label class="rating-option">
+                            <input type="radio" name="q11" value="1"> <label>1 - Muito resistente</label>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="q11" value="2"> <label>2 - Reticente</label>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="q11" value="3"> <label>3 - Neutra</label>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="q11" value="4"> <label>4 - Aberta</label>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="q11" value="5"> <label>5 - Entusiasmada</label>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <div class="question-text">5.2 A equipa acolhe bem novas ferramentas?</div>
+                    <div class="rating-options">
+                        <label class="rating-option">
+                            <input type="radio" name="q12" value="1"> <label>1 - Muito resistente</label>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="q12" value="2"> <label>2 - Reticente</label>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="q12" value="3"> <label>3 - Indiferente</label>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="q12" value="4"> <label>4 - Recetiva</label>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="q12" value="5"> <label>5 - Muito entusiasmada</label>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resultados -->
+            <div class="results-section">
+                <h3>Seu Resultado</h3>
+                <div class="score-display" id="totalScore">0</div>
+                <div class="score-range">Pontuação total de 12 a 60</div>
+
+                <div class="interpretation">
+                    <h4 id="levelTitle">Responda a todas as perguntas para ver seu resultado</h4>
+                    <p id="levelInterpretation">Complete o questionário acima para obter uma análise personalizada da maturidade IA da sua empresa.</p>
+                </div>
+            </div>
+
+            <!-- Ineficiências -->
+            <div class="inefficiencies-section">
+                <h3>Identifique as 3 Principais Ineficiências</h3>
+                <p style="margin-bottom: 20px; color: #0891B2; font-size: 0.9em;">Estime o custo anual de cada ineficiência identificada</p>
+
+                <div class="inefficiency-item">
+                    <h4>Ineficiência #1</h4>
+                    <div class="inefficiency-inputs">
+                        <div class="input-group">
+                            <label>Descrição do processo</label>
+                            <input type="text" id="inef1Desc" placeholder="Ex: Processamento manual de faturas">
+                        </div>
+                        <div class="input-group">
+                            <label>Horas gastas/semana</label>
+                            <input type="number" id="inef1Hours" placeholder="Ex: 8" min="0" step="0.5">
+                        </div>
+                        <div class="input-group">
+                            <label>Custo por hora (€)</label>
+                            <input type="number" id="inef1Cost" placeholder="Ex: 25" min="0" step="1">
+                        </div>
+                        <div class="input-group">
+                            <label class="calc-label">Custo anual (48 semanas)</label>
+                            <div class="cost-calculation"><span class="cost-value" id="inef1Calc">€ 0</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="inefficiency-item">
+                    <h4>Ineficiência #2</h4>
+                    <div class="inefficiency-inputs">
+                        <div class="input-group">
+                            <label>Descrição do processo</label>
+                            <input type="text" id="inef2Desc" placeholder="Ex: Compilação manual de relatórios">
+                        </div>
+                        <div class="input-group">
+                            <label>Horas gastas/semana</label>
+                            <input type="number" id="inef2Hours" placeholder="Ex: 5" min="0" step="0.5">
+                        </div>
+                        <div class="input-group">
+                            <label>Custo por hora (€)</label>
+                            <input type="number" id="inef2Cost" placeholder="Ex: 25" min="0" step="1">
+                        </div>
+                        <div class="input-group">
+                            <label class="calc-label">Custo anual (48 semanas)</label>
+                            <div class="cost-calculation"><span class="cost-value" id="inef2Calc">€ 0</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="inefficiency-item">
+                    <h4>Ineficiência #3</h4>
+                    <div class="inefficiency-inputs">
+                        <div class="input-group">
+                            <label>Descrição do processo</label>
+                            <input type="text" id="inef3Desc" placeholder="Ex: Respostas de email repetitivas">
+                        </div>
+                        <div class="input-group">
+                            <label>Horas gastas/semana</label>
+                            <input type="number" id="inef3Hours" placeholder="Ex: 3" min="0" step="0.5">
+                        </div>
+                        <div class="input-group">
+                            <label>Custo por hora (€)</label>
+                            <input type="number" id="inef3Cost" placeholder="Ex: 25" min="0" step="1">
+                        </div>
+                        <div class="input-group">
+                            <label class="calc-label">Custo anual (48 semanas)</label>
+                            <div class="cost-calculation"><span class="cost-value" id="inef3Calc">€ 0</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="padding: 15px; background-color: #0F1B2D; border-radius: 4px; margin-top: 20px; border-left: 3px solid #E87722;">
+                    <strong>Custo Total Identificado Anualmente:</strong>
+                    <div style="font-size: 1.6em; color: #E87722; margin-top: 10px;"><span id="totalInefCost">€ 0</span></div>
+                </div>
+            </div>
+
+            <div class="buttons">
+                <button type="button" class="btn-primary" onclick="window.print()">Imprimir / Guardar como PDF</button>
+                <button type="reset" class="btn-secondary">Limpar Respostas</button>
+            </div>
+        </form>
+    </div>
+
+    <footer class="footer">
+        <p>© 2026 IA para PMEs — Módulo de Diagnóstico</p>
+    </footer>
+
+    <script>
+        const interpretations = {
+            "12-20": {
+                title: "Gatinhar (Início)",
+                subtitle: "Potencial de ganho máximo",
+                description: "A sua PME está no início da jornada de IA. Há muito potencial de melhoria e isso é uma oportunidade. Recomendamos começar com projetos piloto rápidos para ganhar confiança e momentum."
+            },
+            "21-30": {
+                title: "Gatinhar (Avançado)",
+                subtitle: "Há consciência, falta execução",
+                description: "A equipa tem consciência de IA, mas ainda falta estrutura e execução. O próximo passo é documentar processos e escolher um projeto piloto com retorno rápido."
+            },
+            "31-40": {
+                title: "Andar (Início)",
+                subtitle: "Hora de colher frutos",
+                description: "Tem uma boa base para começar a implementar projetos IA com retorno tangível. Identifique as 3 ineficiências, calcule o ROI e lance um projeto piloto nos próximos 90 dias."
+            },
+            "41-50": {
+                title: "Andar (Avançado)",
+                subtitle: "Base sólida, hora de escalar",
+                description: "Tem uma base excelente. Está na hora de escalar: multiplique o efeito de seus projetos iniciais e comece a integrar IA de forma sistémica em toda a operação."
+            },
+            "51-60": {
+                title: "Correr",
+                subtitle: "À frente de 95% das PMEs",
+                description: "Sua PME está muito adiantada em maturidade IA. Foco em inovação contínua, otimização do ROI e tornando-se um diferencial competitivo através da IA."
+            }
+        };
+
+        function calculateScore() {
+            let total = 0;
+            for (let i = 1; i <= 12; i++) {
+                const radios = document.getElementsByName(`q${i}`);
+                for (let radio of radios) {
+                    if (radio.checked) {
+                        total += parseInt(radio.value);
+                    }
+                }
+            }
+            return total;
+        }
+
+        function updateResults() {
+            const score = calculateScore();
+            const scoreDisplay = document.getElementById('totalScore');
+            scoreDisplay.textContent = score;
+
+            let range = '';
+            if (score >= 12 && score <= 20) range = "12-20";
+            else if (score >= 21 && score <= 30) range = "21-30";
+            else if (score >= 31 && score <= 40) range = "31-40";
+            else if (score >= 41 && score <= 50) range = "41-50";
+            else if (score >= 51 && score <= 60) range = "51-60";
+
+            if (range) {
+                const interp = interpretations[range];
+                document.getElementById('levelTitle').textContent = `${interp.title} — ${interp.subtitle}`;
+                document.getElementById('levelInterpretation').textContent = interp.description;
+            }
+
+            // Update dimension scores
+            updateDimensionScore('d1', [1, 2, 3]);
+            updateDimensionScore('d2', [4, 5, 6]);
+            updateDimensionScore('d3', [7, 8]);
+            updateDimensionScore('d4', [9, 10]);
+            updateDimensionScore('d5', [11, 12]);
+        }
+
+        function updateDimensionScore(dim, questions) {
+            let score = 0;
+            questions.forEach(q => {
+                const radios = document.getElementsByName(`q${q}`);
+                for (let radio of radios) {
+                    if (radio.checked) {
+                        score += parseInt(radio.value);
+                    }
+                }
+            });
+            const max = questions.length * 5;
+            document.getElementById(`score-${dim}`).textContent = `${score}/${max}`;
+        }
+
+        function calculateInefficiencies() {
+            for (let i = 1; i <= 3; i++) {
+                const hours = parseFloat(document.getElementById(`inef${i}Hours`).value) || 0;
+                const cost = parseFloat(document.getElementById(`inef${i}Cost`).value) || 0;
+                const annual = hours * cost * 48;
+                document.getElementById(`inef${i}Calc`).textContent = `€ ${annual.toLocaleString('pt-PT', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            }
+
+            const total1 = (parseFloat(document.getElementById('inef1Hours').value) || 0) * (parseFloat(document.getElementById('inef1Cost').value) || 0) * 48;
+            const total2 = (parseFloat(document.getElementById('inef2Hours').value) || 0) * (parseFloat(document.getElementById('inef2Cost').value) || 0) * 48;
+            const total3 = (parseFloat(document.getElementById('inef3Hours').value) || 0) * (parseFloat(document.getElementById('inef3Cost').value) || 0) * 48;
+            const totalInef = total1 + total2 + total3;
+            document.getElementById('totalInefCost').textContent = `€ ${totalInef.toLocaleString('pt-PT', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+        }
+
+        // Add event listeners to all radio buttons
+        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', updateResults);
+        });
+
+        // Add event listeners to inefficiency inputs
+        ['inef1Hours', 'inef1Cost', 'inef2Hours', 'inef2Cost', 'inef3Hours', 'inef3Cost'].forEach(id => {
+            document.getElementById(id).addEventListener('change', calculateInefficiencies);
+            document.getElementById(id).addEventListener('input', calculateInefficiencies);
+        });
+
+        // Initialize
+        updateResults();
+    </script>
+</body>
+</html>

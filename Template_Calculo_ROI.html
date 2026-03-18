@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de ROI — Projecto IA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Calibri', 'Segoe UI', sans-serif;
+            background-color: #0F1B2D;
+            color: #FFFFFF;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #E87722;
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            font-family: 'Georgia', serif;
+            font-size: 2em;
+            margin-bottom: 8px;
+            color: #E87722;
+        }
+
+        .subtitle {
+            font-size: 1em;
+            color: #0891B2;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background-color: #1B365D;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .input-section {
+            background-color: #0F1B2D;
+            border: 2px solid #0891B2;
+            border-radius: 4px;
+            padding: 25px;
+        }
+
+        .input-section h2 {
+            font-family: 'Georgia', serif;
+            font-size: 1.2em;
+            color: #E87722;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #0891B2;
+        }
+
+        .input-group {
+            margin-bottom: 18px;
+        }
+
+        .input-label {
+            font-size: 0.85em;
+            color: #0891B2;
+            margin-bottom: 6px;
+            display: block;
+            font-weight: 600;
+        }
+
+        .input-help {
+            font-size: 0.75em;
+            color: #999;
+            margin-top: 3px;
+            font-style: italic;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #1B365D;
+            border: 1px solid #0891B2;
+            color: white;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 0.95em;
+            transition: all 0.2s;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #E87722;
+            box-shadow: 0 0 5px rgba(232, 119, 34, 0.3);
+            background-color: #0F1B2D;
+        }
+
+        input[type="number"]::placeholder {
+            color: #666;
+        }
+
+        .results-section {
+            background-color: #0F1B2D;
+            border: 2px solid #E87722;
+            border-radius: 4px;
+            padding: 25px;
+        }
+
+        .results-section h2 {
+            font-family: 'Georgia', serif;
+            font-size: 1.2em;
+            color: #E87722;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #E87722;
+        }
+
+        .result-item {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #1B365D;
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .result-label {
+            font-size: 0.9em;
+            color: #0891B2;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .result-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #E87722;
+            font-family: 'Georgia', serif;
+        }
+
+        .result-value.positive {
+            color: #0891B2;
+        }
+
+        .gauge-container {
+            margin: 25px 0;
+            padding: 20px;
+            background-color: #1B365D;
+            border-radius: 4px;
+            border: 1px solid #0891B2;
+        }
+
+        .gauge-title {
+            font-size: 0.9em;
+            color: #0891B2;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .gauge-bar {
+            width: 100%;
+            height: 30px;
+            background-color: #0F1B2D;
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid #0891B2;
+            position: relative;
+        }
+
+        .gauge-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #E87722 0%, #E87722 50%, #0891B2 100%);
+            width: 0%;
+            border-radius: 15px;
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.8em;
+        }
+
+        .gauge-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75em;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        .recommendation-box {
+            background-color: #1B365D;
+            border: 2px solid #E87722;
+            border-radius: 4px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .recommendation-label {
+            font-size: 0.85em;
+            color: #0891B2;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .recommendation-text {
+            font-family: 'Georgia', serif;
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #E87722;
+        }
+
+        .recommendation-text.implementar {
+            color: #0891B2;
+        }
+
+        .calculation-grid {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #1B365D;
+        }
+
+        .calc-group {
+            margin-bottom: 15px;
+            padding: 12px;
+            background-color: #1B365D;
+            border-radius: 4px;
+            border-left: 3px solid #0891B2;
+        }
+
+        .calc-label {
+            font-size: 0.8em;
+            color: #0891B2;
+            font-weight: 600;
+        }
+
+        .calc-value {
+            font-size: 1.1em;
+            color: #E87722;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        .full-width {
+            grid-column: span 2;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 12px 30px;
+            font-size: 1em;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background-color: #E87722;
+            color: #0F1B2D;
+        }
+
+        .btn-primary:hover {
+            background-color: #FF9D5C;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(232, 119, 34, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: #0891B2;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #06A8C8;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(8, 145, 178, 0.3);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #0891B2;
+            font-size: 0.85em;
+            color: #999;
+        }
+
+        @media print {
+            body {
+                background-color: white;
+            }
+
+            .container {
+                background-color: white;
+                color: #000;
+                box-shadow: none;
+            }
+
+            input {
+                background-color: white;
+                color: #000;
+                border: 1px solid #999;
+            }
+
+            .input-section, .results-section, .gauge-container, .recommendation-box, .calc-group {
+                background-color: #f9f9f9;
+                border-color: #999;
+                color: #000;
+            }
+
+            h1, h2 {
+                color: #0F1B2D;
+            }
+
+            .result-value, .recommendation-text {
+                color: #0F1B2D;
+            }
+
+            button {
+                display: none;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .full-width {
+                grid-column: span 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.4em;
+            }
+
+            .input-section h2, .results-section h2 {
+                font-size: 1.1em;
+            }
+
+            .result-value {
+                font-size: 1.4em;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Calculadora de ROI</h1>
+        <p class="subtitle">Projecto IA — Calcula o seu retorno</p>
+    </header>
+
+    <div class="container">
+        <form id="roiForm">
+            <div class="main-grid">
+                <!-- Input Section -->
+                <div class="input-section">
+                    <h2>Dados do Projecto</h2>
+
+                    <div class="input-group">
+                        <label class="input-label">Horas economizadas por semana</label>
+                        <input type="number" id="hoursSaved" placeholder="Ex: 10" min="0" step="0.5" value="0">
+                        <div class="input-help">Tempo gasto em tarefas que IA vai automatizar</div>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label">Custo por hora (€)</label>
+                        <input type="number" id="hourlyRate" placeholder="Ex: 25" min="0" step="1" value="0">
+                        <div class="input-help">Custo médio de uma hora de trabalho humano</div>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label">Erros reduzidos por mês</label>
+                        <input type="number" id="errorsReduced" placeholder="Ex: 5" min="0" step="0.1" value="0">
+                        <div class="input-help">Quantos erros deixarão de acontecer</div>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label">Custo por erro (€)</label>
+                        <input type="number" id="costPerError" placeholder="Ex: 150" min="0" step="1" value="0">
+                        <div class="input-help">Impacto financeiro de cada erro</div>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label">Receita adicional por mês (€)</label>
+                        <input type="number" id="additionalRevenue" placeholder="Ex: 2000" min="0" step="100" value="0">
+                        <div class="input-help">Novas oportunidades criadas pela IA</div>
+                    </div>
+
+                    <h2 style="margin-top: 30px;">Custos do Projecto</h2>
+
+                    <div class="input-group">
+                        <label class="input-label">Custo de implementação (€)</label>
+                        <input type="number" id="implementationCost" placeholder="Ex: 5000" min="0" step="100" value="0">
+                        <div class="input-help">Setup, integração, configuração</div>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label">Custo mensal de licença (€)</label>
+                        <input type="number" id="monthlyCost" placeholder="Ex: 500" min="0" step="10" value="0">
+                        <div class="input-help">Assinatura de ferramentas IA, hosting, etc.</div>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label">Custo de formação (€)</label>
+                        <input type="number" id="trainingCost" placeholder="Ex: 1000" min="0" step="100" value="0">
+                        <div class="input-help">Treino da equipa na ferramenta</div>
+                    </div>
+                </div>
+
+                <!-- Results Section -->
+                <div class="results-section">
+                    <h2>Resultados</h2>
+
+                    <div class="result-item">
+                        <div class="result-label">Benefício Anual Total</div>
+                        <div class="result-value positive" id="annualBenefits">€ 0</div>
+                    </div>
+
+                    <div class="result-item">
+                        <div class="result-label">Custo Anual Total</div>
+                        <div class="result-value" id="annualCosts">€ 0</div>
+                    </div>
+
+                    <div class="result-item">
+                        <div class="result-label">Lucro Líquido Anual</div>
+                        <div class="result-value positive" id="netProfit">€ 0</div>
+                    </div>
+
+                    <div class="gauge-container">
+                        <div class="gauge-title">ROI em Percentagem</div>
+                        <div class="gauge-bar">
+                            <div class="gauge-fill" id="roiGauge">0%</div>
+                        </div>
+                        <div class="gauge-labels">
+                            <span>0%</span>
+                            <span>100%</span>
+                            <span>200%+</span>
+                        </div>
+                    </div>
+
+                    <div class="result-item">
+                        <div class="result-label">Payback Period</div>
+                        <div class="result-value positive" id="paybackPeriod">-</div>
+                    </div>
+
+                    <div class="recommendation-box">
+                        <div class="recommendation-label">Recomendação</div>
+                        <div class="recommendation-text implementar" id="recommendation">PREENCHA OS DADOS</div>
+                    </div>
+
+                    <div class="calculation-grid">
+                        <div class="calc-group">
+                            <div class="calc-label">Economia de Horas Anual</div>
+                            <div class="calc-value" id="annualHours">0 horas</div>
+                        </div>
+                        <div class="calc-group">
+                            <div class="calc-label">Valor das Horas Economizadas</div>
+                            <div class="calc-value" id="hoursValue">€ 0</div>
+                        </div>
+                        <div class="calc-group">
+                            <div class="calc-label">Economia em Erros (anual)</div>
+                            <div class="calc-value" id="errorsSavings">€ 0</div>
+                        </div>
+                        <div class="calc-group">
+                            <div class="calc-label">Receita Adicional (anual)</div>
+                            <div class="calc-value" id="totalRevenue">€ 0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="buttons">
+                <button type="button" class="btn-primary" onclick="window.print()">Imprimir / Guardar como PDF</button>
+                <button type="reset" class="btn-secondary">Limpar Tudo</button>
+            </div>
+        </form>
+    </div>
+
+    <footer class="footer">
+        <p>© 2026 IA para PMEs — Calculadora de ROI</p>
+    </footer>
+
+    <script>
+        const form = document.getElementById('roiForm');
+        const inputs = form.querySelectorAll('input[type="number"]');
+
+        function calculateROI() {
+            // Get input values
+            const hoursSaved = parseFloat(document.getElementById('hoursSaved').value) || 0;
+            const hourlyRate = parseFloat(document.getElementById('hourlyRate').value) || 0;
+            const errorsReduced = parseFloat(document.getElementById('errorsReduced').value) || 0;
+            const costPerError = parseFloat(document.getElementById('costPerError').value) || 0;
+            const additionalRevenue = parseFloat(document.getElementById('additionalRevenue').value) || 0;
+            const implementationCost = parseFloat(document.getElementById('implementationCost').value) || 0;
+            const monthlyCost = parseFloat(document.getElementById('monthlyCost').value) || 0;
+            const trainingCost = parseFloat(document.getElementById('trainingCost').value) || 0;
+
+            // Calculate benefits
+            const annualHours = hoursSaved * 52;
+            const hoursValue = annualHours * hourlyRate;
+            const errorsSavings = errorsReduced * 12 * costPerError;
+            const totalRevenue = additionalRevenue * 12;
+            const annualBenefits = hoursValue + errorsSavings + totalRevenue;
+
+            // Calculate costs
+            const annualCosts = implementationCost + (monthlyCost * 12) + trainingCost;
+
+            // Calculate net profit and ROI
+            const netProfit = annualBenefits - annualCosts;
+            const roi = annualCosts > 0 ? (netProfit / annualCosts * 100) : 0;
+
+            // Calculate payback period
+            const monthlyBenefit = annualBenefits / 12;
+            const monthlyLicenseCost = monthlyCost;
+            const monthlyNetBenefit = monthlyBenefit - monthlyLicenseCost;
+
+            let paybackMonths = '-';
+            if (monthlyNetBenefit > 0) {
+                const totalUpfrontCost = implementationCost + trainingCost;
+                if (totalUpfrontCost > 0) {
+                    paybackMonths = Math.ceil(totalUpfrontCost / monthlyNetBenefit);
+                    paybackMonths = `${paybackMonths} meses`;
+                } else {
+                    paybackMonths = 'Imediato';
+                }
+            }
+
+            // Update results
+            document.getElementById('annualBenefits').textContent = `€ ${annualBenefits.toLocaleString('pt-PT', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            document.getElementById('annualCosts').textContent = `€ ${annualCosts.toLocaleString('pt-PT', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            document.getElementById('netProfit').textContent = `€ ${netProfit.toLocaleString('pt-PT', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            document.getElementById('paybackPeriod').textContent = paybackMonths;
+
+            // Update gauge
+            const gaugePercent = Math.min(roi, 200);
+            document.getElementById('roiGauge').style.width = (gaugePercent / 2) + '%';
+            document.getElementById('roiGauge').textContent = `${Math.round(roi)}%`;
+
+            // Update calculation details
+            document.getElementById('annualHours').textContent = `${annualHours.toLocaleString('pt-PT')} horas`;
+            document.getElementById('hoursValue').textContent = `€ ${hoursValue.toLocaleString('pt-PT', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            document.getElementById('errorsSavings').textContent = `€ ${errorsSavings.toLocaleString('pt-PT', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            document.getElementById('totalRevenue').textContent = `€ ${totalRevenue.toLocaleString('pt-PT', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+
+            // Recommendation
+            let recommendation = 'REPENSAR';
+            let recClass = '';
+
+            if (netProfit < 0) {
+                recommendation = 'REPENSAR';
+                recClass = '';
+            } else if (roi < 50) {
+                recommendation = 'PILOTAR';
+                recClass = '';
+            } else if (roi < 150) {
+                recommendation = 'GO';
+                recClass = '';
+            } else {
+                recommendation = 'IMPLEMENTAR JÁ';
+                recClass = 'implementar';
+            }
+
+            const recElement = document.getElementById('recommendation');
+            recElement.textContent = recommendation;
+            recElement.className = 'recommendation-text ' + recClass;
+        }
+
+        // Add event listeners
+        inputs.forEach(input => {
+            input.addEventListener('input', calculateROI);
+            input.addEventListener('change', calculateROI);
+        });
+
+        // Initial calculation
+        calculateROI();
+    </script>
+</body>
+</html>
